@@ -1,19 +1,11 @@
-// auth.rs
-use rusqlite::{params, Connection};
-use sha2::{Digest, Sha256};
-use std::io;
-use std::io::Write;
+use std::io::{self, Write};
+
+use sha2::{Sha256, Digest};
 use uuid::Uuid;
 
-use crate::model::insert_user;
+use crate::database::Database;
+use crate::user::User;
 
-// Definição da estrutura User para representar um usuário com nome de usuário e senha
-/* pub struct User {
-    pub email: String,
-    pub password: String,
-} */
-
-// Função para ler a entrada do usuário e converter para String
 pub fn read_input(prompt: &str) -> String {
     print!("{}", prompt);
     io::stdout().flush().unwrap();
@@ -31,7 +23,7 @@ fn hash_password(password: &str) -> String {
     format!("{:x}", hasher.finalize())
 }
 
-pub fn register(conn: &Connection) {
+pub fn register(db: &Database) {
     let email = read_input("Digite seu endereço de email: ");
     let password = read_input("Digite sua senha: ");
 
@@ -41,14 +33,13 @@ pub fn register(conn: &Connection) {
     // gera um novo UUID para o usuário
     let user_id = Uuid::new_v4().to_string();
 
-    insert_user(conn, &user_id, &email, &password_hash);
+    User::create(db, &user_id, &email, &password_hash);
 
     println!("Usuário registrado com sucesso! {}", user_id);
 }
 
-
 // Função para autenticar o usuário
-pub fn authenticate(conn: &Connection) -> Option<String> {
+pub fn authenticate(db: &Database) -> Option<String> {
     println!("Bem vindo ao internet banking");
 
     let email = read_input("Digite seu email: ");
@@ -56,17 +47,9 @@ pub fn authenticate(conn: &Connection) -> Option<String> {
 
     let password_hash = hash_password(&password);
 
-    let mut stmt = conn
-        .prepare("SELECT email FROM users WHERE email = ?1 AND password = ?2")
-        .unwrap();
-    let user_iter = stmt
-        .query_map(params![email, password_hash], |row| row.get(0))
-        .unwrap();
-
-
-    for user_email in user_iter {
-        if let Ok(user_email) = user_email {
-            return Some(user_email);
+    if let Some(user) = User::find_by_email(db, &email) {
+        if user.password_hash == password_hash {
+            return Some(user.email);
         }
     }
 

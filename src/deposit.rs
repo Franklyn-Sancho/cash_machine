@@ -1,11 +1,10 @@
-use rusqlite::Connection;
-
 // deposit.rs
 use crate::account::Account;
-use crate::auth::read_input;
+use crate::authentication::read_input;
+use crate::database::Database;
 
 // Função para realizar depósitos na conta
-pub fn deposit(conn: &Connection ,account: &mut Account) {
+pub fn deposit(db: &Database ,account: &mut Account) {
     loop {
         let value =
             read_input("Quando você deseja depositar (digite 0 para retornar ao menu inicial): ");
@@ -14,6 +13,6 @@ pub fn deposit(conn: &Connection ,account: &mut Account) {
         }
         let value: f64 = value.parse().unwrap();
         account.deposit(value);
-        account.save(conn)
+        account.save(db)
     }
 }

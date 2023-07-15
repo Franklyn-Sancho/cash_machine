@@ -1,11 +1,12 @@
-use rusqlite::Connection;
+
 
 // withdraw.rs
 use crate::account::Account;
-use crate::auth::read_input;
+use crate::authentication::read_input;
+use crate::database::Database;
 
 // Função para realizar saques na conta
-pub fn withdraw(conn: &Connection ,account: &mut Account) {
+pub fn withdraw(db: &Database ,account: &mut Account) {
     if account.balance == 0.0 {
         println!("Saldo insuficiente");
         return;
@@ -20,6 +21,6 @@ pub fn withdraw(conn: &Connection ,account: &mut Account) {
         }
         let value: f64 = value.parse().unwrap();
         account.withdraw(value);
-        account.save(conn)
+        account.save(db)
     }
 }

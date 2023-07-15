@@ -1,4 +1,5 @@
-use rusqlite::{Connection, params};
+use rusqlite::params;
+use crate::database::Database;
 
 // account.rs
 // Definição da estrutura Account para representar uma conta bancária
@@ -46,8 +47,8 @@ impl Account {
         }
     }
 
-    pub fn save(&self, conn: &Connection) {
-        conn.execute(
+    pub fn save(&self, db: &Database) {
+        db.conn.execute(
             "UPDATE accounts SET balance = ?1 WHERE id = ?2",
             params![self.balance, self.id],
         )
