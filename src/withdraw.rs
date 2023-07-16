@@ -1,12 +1,10 @@
-
-
 // withdraw.rs
 use crate::account::Account;
-use crate::authentication::read_input;
 use crate::database::Database;
+use crate::utils::read_input;
 
 // Função para realizar saques na conta
-pub fn withdraw(db: &Database ,account: &mut Account) {
+pub fn withdraw(db: &Database, account: &mut Account) {
     if account.balance == 0.0 {
         println!("Saldo insuficiente");
         return;
@@ -19,8 +17,12 @@ pub fn withdraw(db: &Database ,account: &mut Account) {
         if value == "0" {
             break;
         }
-        let value: f64 = value.parse().unwrap();
-        account.withdraw(value);
-        account.save(db)
+        if let Ok(value) = value.parse::<f64>() {
+            account.withdraw(value);
+            account.save(db)
+        }
+        else {
+            println!("Valid inválido, tente novamente")
+        }
     }
 }

@@ -1,4 +1,3 @@
-// main.rs
 mod account;
 mod deposit;
 mod withdraw;
@@ -6,6 +5,7 @@ mod menus;
 mod database;
 mod user;
 mod authentication;
+mod utils;
 
 use database::Database;
 use deposit::deposit;

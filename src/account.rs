@@ -1,7 +1,6 @@
 use rusqlite::params;
 use crate::database::Database;
 
-// account.rs
 // Definição da estrutura Account para representar uma conta bancária
 pub struct Account {
     pub id: i32,
@@ -24,7 +23,6 @@ impl Account {
     pub fn deposit(&mut self, value: f64) {
         // Verifica se a cédula é aceita
         if self.coins.contains(&value) {
-            // Adiciona o valor ao saldo da conta
             self.balance += value;
             println!(
                 "Você depositou {} e seu saldo total é: {}",

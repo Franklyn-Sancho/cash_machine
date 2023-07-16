@@ -1,7 +1,7 @@
 // deposit.rs
 use crate::account::Account;
-use crate::authentication::read_input;
 use crate::database::Database;
+use crate::utils::read_input;
 
 // Função para realizar depósitos na conta
 pub fn deposit(db: &Database ,account: &mut Account) {
@@ -11,8 +11,12 @@ pub fn deposit(db: &Database ,account: &mut Account) {
         if value == "0" {
             break;
         }
-        let value: f64 = value.parse().unwrap();
-        account.deposit(value);
-        account.save(db)
+        if let Ok(value) = value.parse::<f64>() {
+            account.deposit(value);
+            account.save(db)
+        }
+        else {
+            println!("Valid inválido, tente novamente")
+        }
     }
 }
