@@ -1,7 +1,8 @@
 // withdraw.rs
-use crate::account::Account;
-use crate::database::Database;
-use crate::utils::read_input;
+use crate::account::account::Account;
+use crate::models::account_model::update_account;
+use crate::database::database::Database;
+use crate::utils::read_input::read_input;
 
 // Função para realizar saques na conta
 pub fn withdraw(db: &Database, account: &mut Account) {
@@ -18,8 +19,8 @@ pub fn withdraw(db: &Database, account: &mut Account) {
             break;
         }
         if let Ok(value) = value.parse::<f64>() {
-            account.withdraw(value);
-            account.save(db)
+            account.withdraw(db, value);
+            update_account(db, account)
         }
         else {
             println!("Valid inválido, tente novamente")

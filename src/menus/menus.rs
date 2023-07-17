@@ -1,11 +1,14 @@
 use crate::{
-    account::Account,
-    authentication::{authenticate, register},
-    database::Database,
-    deposit, withdraw, utils::read_input,
+    account::account::Account,
+    models::account_model::{create_account, get_account, get_transactions},
+    database::database::Database,
+    account::deposit::deposit,
+    utils::read_input::{self, read_input},
+    account::withdraw::withdraw, 
+    authentication::authentication::register,
+    authentication::authentication::authenticate
 };
 
-//menu inicial para login e autenticação
 pub fn login_register_menu(db: &Database) {
     loop {
         println!("Escolha a sua opção: ");
@@ -19,7 +22,8 @@ pub fn login_register_menu(db: &Database) {
             match option {
                 1 => {
                     if let Some(user) = authenticate(db) {
-                        let mut account = db.get_account(&user.id);
+                        let mut account = get_account(db, &user.id)
+                            .unwrap_or_else(|| create_account(db, &user.id));
                         transaction_menu(db, &mut account);
                         break;
                     } else {
@@ -45,7 +49,8 @@ fn transaction_menu(db: &Database, account: &mut Account) {
         println!("Escolha a sua opção: ");
         println!("1 - Depositar");
         println!("2 - Sacar");
-        println!("3 - Sair");
+        println!("3 - Ver Extrato");
+        println!("4 - Sair");
         print!("Insira a sua opção aqui: ");
 
         let option = read_input("");
@@ -53,7 +58,13 @@ fn transaction_menu(db: &Database, account: &mut Account) {
             match option {
                 1 => deposit(db, account),
                 2 => withdraw(db, account),
-                3 => break,
+                3 => {
+                    let transactions = get_transactions(db, account.id);
+                    for transaction in transactions {
+                        println!("{:?}", transaction)
+                    }
+                }
+                4 => break,
                 _ => println!("Opção inválida"),
             }
         } else {

@@ -1,9 +1,9 @@
 use bcrypt::{hash, DEFAULT_COST, verify};
 use uuid::Uuid;
 
-use crate::database::Database;
-use crate::user::User;
-use crate::utils::read_input;
+use crate::database::database::Database;
+use crate::models::user::User;
+use crate::utils::read_input::read_input;
 
 
 //hash com bcrypt
@@ -25,7 +25,7 @@ pub fn register(db: &Database) {
     // gera um novo UUID para o usuário
     let user_id = Uuid::new_v4().to_string();
 
-    User::create(db, &user_id, &email, &password_hash);
+    User::create_user(db, &user_id, &email, &password_hash);
 
     println!("Usuário registrado com sucesso! {}", user_id);
 }

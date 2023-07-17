@@ -1,4 +1,4 @@
-use crate::database::Database;
+use crate::database::database::Database;
 
 pub struct User {
     pub id: String,
@@ -6,12 +6,14 @@ pub struct User {
     pub password_hash: String,
 }
 
+
+
 impl User {
     pub fn new(id: String, email: String, password_hash: String) -> Self {
         Self { id, email, password_hash }
     }
 
-    pub fn create(db: &Database, id: &str, email: &str, password_hash: &str) -> Self {
+    pub fn create_user(db: &Database, id: &str, email: &str, password_hash: &str) -> Self {
         db.insert_user(id, email, password_hash);
         Self::new(id.to_string(), email.to_string(), password_hash.to_string())
     }

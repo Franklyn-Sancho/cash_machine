@@ -1,4 +1,3 @@
-use crate::account::Account;
 use rusqlite::{params, Connection};
 
 //estrutura de conexão
@@ -35,6 +34,21 @@ impl Database {
                 [],
             )
             .unwrap();
+
+        //cria a tabela transactions
+        self.conn
+            .execute(
+                "CREATE TABLE IF NOT EXISTS transactions (
+                    id INTEGER PRIMARY KEY,
+                    account_id INTEGER,
+                    date TEXT,
+                    value REAL,
+                    kind TEXT,
+                    description TEXT
+                )",
+                [],
+            )
+            .unwrap();
     }
 
     pub fn insert_user(&self, user_id: &str, email: &str, password_hash: &str) {
@@ -44,24 +58,5 @@ impl Database {
                 params![user_id, email, password_hash],
             )
             .unwrap();
-    }
-
-    pub fn get_account(&self, user_id: &str) -> Account {
-        self.conn
-            .query_row(
-                "SELECT id, balance FROM accounts WHERE user_id = ?1",
-                [user_id],
-                |row| Ok(Account::new(row.get(0)?, row.get(1)?)),
-            )
-            .unwrap_or_else(|_| {
-                self.conn
-                    .execute(
-                        "INSERT INTO accounts (user_id, balance) VALUES (?1, 0)",
-                        [user_id],
-                    )
-                    .unwrap();
-                let account_id = self.conn.last_insert_rowid();
-                Account::new(account_id as i32, 0.0)
-            })
     }
 }
