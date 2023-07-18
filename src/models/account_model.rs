@@ -35,11 +35,21 @@ impl FromSql for TransactionKind {
     }
 }
 
-pub fn get_account(db: &Database, user_id: &str) -> Option<Account> {
+pub fn get_account_by_user(db: &Database, user_id: &str) -> Option<Account> {
     db.conn
         .query_row(
             "SELECT id, balance FROM accounts WHERE user_id = ?1",
             [user_id],
+            |row| Ok(Account::new(row.get(0)?, row.get(1)?)),
+        )
+        .ok()
+}
+
+pub fn get_account_by_id(db: &Database, account_id: &i32) -> Option<Account> {
+    db.conn
+        .query_row(
+            "SELECT id, balance FROM accounts WHERE id = ?1",
+            [account_id],
             |row| Ok(Account::new(row.get(0)?, row.get(1)?)),
         )
         .ok()
@@ -58,12 +68,13 @@ pub fn create_account(db: &Database, user_id: &str) -> Account {
 
 
 pub fn update_account(db: &Database, account: &Account) {
-    db.conn
-        .execute(
-            "UPDATE accounts SET balance = ?1 WHERE id = ?2",
-            params![account.balance, account.id],
-        )
-        .unwrap();
+    match db.conn.execute(
+        "UPDATE accounts SET balance = ?1 WHERE id = ?2",
+        params![account.balance, account.id],
+    ) {
+        Ok(_) => (),
+        Err(e) => println!("Erro ao atualizar a conta: {}", e),
+    }
 }
 
 pub fn create_transaction(db: &Database, transaction: &Transaction) {
@@ -86,10 +97,10 @@ pub fn get_transactions(db: &Database, account_id: i32) -> Vec<String> {
         let value: f64 = row.get(1).unwrap();
         let kind: String = row.get(2).unwrap();
         let description: String = row.get(3).unwrap();
-        Ok(format!("{} - {} - {:.2} - {}", date.to_rfc3339(), kind, value, description))
+        Ok(format!("{} | {} | {:.2} | {}", date.to_rfc3339(), kind, value, description))
     }).unwrap();
 
     rows.map(|row| row.unwrap()).collect()
 }
-
+ 
 

@@ -1,12 +1,13 @@
 use crate::{
     account::account::Account,
-    models::account_model::{create_account, get_account, get_transactions},
+    models::account_model::{create_account, get_transactions, get_account_by_user},
     database::database::Database,
     account::deposit::deposit,
-    utils::read_input::{self, read_input},
+    utils::read_input::read_input,
     account::withdraw::withdraw, 
     authentication::authentication::register,
-    authentication::authentication::authenticate
+    authentication::authentication::authenticate,
+    account::transfer::transfer_input,
 };
 
 pub fn login_register_menu(db: &Database) {
@@ -22,7 +23,7 @@ pub fn login_register_menu(db: &Database) {
             match option {
                 1 => {
                     if let Some(user) = authenticate(db) {
-                        let mut account = get_account(db, &user.id)
+                        let mut account = get_account_by_user(db, &user.id)
                             .unwrap_or_else(|| create_account(db, &user.id));
                         transaction_menu(db, &mut account);
                         break;
@@ -50,7 +51,8 @@ fn transaction_menu(db: &Database, account: &mut Account) {
         println!("1 - Depositar");
         println!("2 - Sacar");
         println!("3 - Ver Extrato");
-        println!("4 - Sair");
+        println!("4 - Transferência");
+        println!("5 - Sair");
         print!("Insira a sua opção aqui: ");
 
         let option = read_input("");
@@ -64,7 +66,7 @@ fn transaction_menu(db: &Database, account: &mut Account) {
                         println!("{:?}", transaction)
                     }
                 }
-                4 => break,
+                4 => transfer_input(db, account),
                 _ => println!("Opção inválida"),
             }
         } else {

@@ -19,6 +19,8 @@ pub mod account {
     pub mod account;
     pub mod deposit;
     pub mod withdraw;
+    pub mod transfer;
+    pub mod transactions;
 }
 
 pub mod database {
