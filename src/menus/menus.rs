@@ -2,12 +2,10 @@ use crate::{
     account::account::Account,
     models::account_model::{create_account, get_transactions, get_account_by_user},
     database::database::Database,
-    account::deposit::deposit,
     utils::read_input::read_input,
-    account::withdraw::withdraw, 
     authentication::authentication::register,
     authentication::authentication::authenticate,
-    account::transfer::transfer_input,
+    account::{transfer::transfer_input, withdraw::withdraw_input, deposit::deposit_input},
 };
 
 pub fn login_register_menu(db: &Database) {
@@ -58,8 +56,8 @@ fn transaction_menu(db: &Database, account: &mut Account) {
         let option = read_input("");
         if let Ok(option) = option.parse() {
             match option {
-                1 => deposit(db, account),
-                2 => withdraw(db, account),
+                1 => deposit_input(db, account),
+                2 => withdraw_input(db, account),
                 3 => {
                     let transactions = get_transactions(db, account.id);
                     for transaction in transactions {
@@ -67,6 +65,7 @@ fn transaction_menu(db: &Database, account: &mut Account) {
                     }
                 }
                 4 => transfer_input(db, account),
+                5 => break,
                 _ => println!("Opção inválida"),
             }
         } else {
