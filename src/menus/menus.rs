@@ -1,11 +1,10 @@
 use crate::{
     account::account::Account,
-    models::account_model::{create_account, get_transactions, get_account_by_user},
+    account::{deposit::deposit_input, transfer::transfer_input, withdraw::withdraw_input},
+    authentication::{authentication::authenticate, register::register},
     database::database::Database,
+    models::account_model::get_transactions,
     utils::read_input::read_input,
-    authentication::authentication::register,
-    authentication::authentication::authenticate,
-    account::{transfer::transfer_input, withdraw::withdraw_input, deposit::deposit_input},
 };
 
 pub fn login_register_menu(db: &Database) {
@@ -20,9 +19,7 @@ pub fn login_register_menu(db: &Database) {
         if let Ok(option) = option.parse() {
             match option {
                 1 => {
-                    if let Some(user) = authenticate(db) {
-                        let mut account = get_account_by_user(db, &user.id)
-                            .unwrap_or_else(|| create_account(db, &user.id));
+                    if let Some(mut account) = authenticate(db) {
                         transaction_menu(db, &mut account);
                         break;
                     } else {

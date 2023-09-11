@@ -67,16 +67,11 @@ fn make_transfer(
 
 pub fn transfer_input(db: &Database, account: &mut Account) {
     loop {
-        let email =
-            read_input("
-            Enter the recipient's email (enter 0 to return to the main menu):");
+        let email = read_input("Enter the recipient's email (enter 0 to return to the main menu):");
         if email == "0" {
             break;
         }
-        let value = read_input(
-            "
-            Enter the amount to be transferred (enter 0 to return to the main menu):",
-        );
+        let value = read_input("Enter the amount to be transferred (enter 0 to return to the main menu): ");
         if value == "0" {
             break;
         }

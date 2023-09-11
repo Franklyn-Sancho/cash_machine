@@ -1,5 +1,6 @@
 pub mod authentication {
     pub mod authentication;
+    pub mod register;
 }
 
 pub mod utils {

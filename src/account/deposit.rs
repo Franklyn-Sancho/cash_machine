@@ -24,8 +24,7 @@ pub fn deposit(db: &Database, account: &mut Account, value: f64) -> Result<(), S
 // Função para realizar depósitos na conta
 pub fn deposit_input(db: &Database, account: &mut Account) {
     loop {
-        let value =
-            read_input("How much do you want to deposit (enter 0 to return to the home menu): ");
+        let value = read_input("How much do you want to deposit (enter 0 to return to the home menu): ");
         if value == "0" {
             break;
         }
