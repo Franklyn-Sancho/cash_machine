@@ -79,7 +79,6 @@ pub fn update_account(db: &Database, account: &Account) {
 
 pub fn create_transaction(db: &Database, transaction: &Transaction) {
     let formatted_date = transaction.date.format("%Y-%m-%d %H:%M:%S").to_string();
-    println!("Formatted date: {}", formatted_date);
     db.conn.execute(
         "INSERT INTO transactions (account_id, date, value, kind, description) VALUES (?1, ?2, ?3, ?4, ?5)",
         params![transaction.account_id, formatted_date, transaction.value, format!("{:?}", transaction.kind), transaction.description],

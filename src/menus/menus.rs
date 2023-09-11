@@ -10,11 +10,11 @@ use crate::{
 
 pub fn login_register_menu(db: &Database) {
     loop {
-        println!("Escolha a sua opção: ");
+        println!("Choice an option: ");
         println!("1 - Login");
-        println!("2 - Registrar");
-        println!("3 - Sair");
-        print!("Insira a sua opção aqui: ");
+        println!("2 - Register");
+        println!("3 - Exit");
+        print!("Insert Your Option: ");
 
         let option = read_input("");
         if let Ok(option) = option.parse() {
@@ -26,17 +26,17 @@ pub fn login_register_menu(db: &Database) {
                         transaction_menu(db, &mut account);
                         break;
                     } else {
-                        println!("Nome de usuário ou senha inválidos");
+                        println!("invalid email or password");
                     }
                 }
                 2 => {
                     register(db);
                 }
                 3 => break,
-                _ => println!("Opção inválida"),
+                _ => println!("Invalid Option"),
             }
         } else {
-            println!("opção inválida, tente novamente")
+            println!("Option Invalid, Try Again")
         }
     }
 }
@@ -44,14 +44,14 @@ pub fn login_register_menu(db: &Database) {
 //menu do sistema bancário (saque e deposito)
 fn transaction_menu(db: &Database, account: &mut Account) {
     loop {
-        println!("Seu saldo atual é: {:.2}", account.balance);
-        println!("Escolha a sua opção: ");
-        println!("1 - Depositar");
-        println!("2 - Sacar");
-        println!("3 - Ver Extrato");
-        println!("4 - Transferência");
-        println!("5 - Sair");
-        print!("Insira a sua opção aqui: ");
+        println!("current balance: {:.2}", account.balance);
+        println!("choose an option: ");
+        println!("1 - Deposit");
+        println!("2 - Withdraw");
+        println!("3 - Bank Statement");
+        println!("4 - Transfer");
+        println!("5 - Exit");
+        print!("Insert your option here: ");
 
         let option = read_input("");
         if let Ok(option) = option.parse() {
@@ -66,10 +66,10 @@ fn transaction_menu(db: &Database, account: &mut Account) {
                 }
                 4 => transfer_input(db, account),
                 5 => break,
-                _ => println!("Opção inválida"),
+                _ => println!("Invalid Option"),
             }
         } else {
-            println!("Opção inválida, tente novamente")
+            println!("Invalid Option, try again")
         }
     }
 }

@@ -8,7 +8,7 @@ use super::account::Account;
 
 pub fn deposit(db: &Database, account: &mut Account, value: f64) -> Result<(), String> {
     if !account.is_valid_coin(value) {
-        return Err(format!("Só aceitamos cédulas de {:?}", account.coins));
+        return Err(format!("accepted values: {:?}", account.coins));
     }
 
     Account::update_balance(
@@ -16,7 +16,7 @@ pub fn deposit(db: &Database, account: &mut Account, value: f64) -> Result<(), S
         account,
         value,
         TransactionKind::Deposit,
-        format!("Depósito de {:.2}", value),
+        format!("deposited amount {:.2}", value),
     );
     Ok(())
 }
@@ -25,7 +25,7 @@ pub fn deposit(db: &Database, account: &mut Account, value: f64) -> Result<(), S
 pub fn deposit_input(db: &Database, account: &mut Account) {
     loop {
         let value =
-            read_input("Quando você deseja depositar (digite 0 para retornar ao menu inicial): ");
+            read_input("How much do you want to deposit (enter 0 to return to the home menu): ");
         if value == "0" {
             break;
         }
@@ -33,7 +33,7 @@ pub fn deposit_input(db: &Database, account: &mut Account) {
             Account::update_balance(db, account, value, TransactionKind::Deposit, format!("Depósito de {:.2}", value));
         }
         else {
-            println!("Valor inválido, tente novamente")
+            println!("Invalid value, please try again")
         }
     }
 }

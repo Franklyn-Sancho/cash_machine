@@ -6,6 +6,7 @@ pub fn read_input(prompt: &str) -> String {
     let mut value = String::new();
     io::stdin()
         .read_line(&mut value)
-        .expect("Falha ao ler entrada");
+        .expect("
+        failed to read input");
     value.trim().to_string()
 }

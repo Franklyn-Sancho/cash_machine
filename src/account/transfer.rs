@@ -24,12 +24,12 @@ pub fn transfer(
 }
 
 fn get_from_account(db: &Database, from_account_id: &i32) -> Result<Account, String> {
-    get_account_by_id(db, from_account_id).ok_or("Conta de origem não encontrada".to_string())
+    get_account_by_id(db, from_account_id).ok_or("Source account not found".to_string())
 }
 
 fn check_sufficient_balance(from_account: &Account, value: f64) -> Result<(), String> {
     if from_account.balance < value {
-        Err("Saldo insuficiente".to_string())
+        Err("Insufficient funds".to_string())
     } else {
         Ok(())
     }
@@ -37,7 +37,7 @@ fn check_sufficient_balance(from_account: &Account, value: f64) -> Result<(), St
 
 fn get_to_account(db: &Database, to_email: &str) -> Result<Account, String> {
     let to_user =
-        user::User::find_by_email(db, to_email).ok_or("Usuário destinatário não encontrado")?;
+        user::User::find_by_email(db, to_email).ok_or("Recipient user not found")?;
     Ok(get_account_by_user(db, &to_user.id).unwrap_or_else(|| create_account(db, &to_user.id)))
 }
 
@@ -52,14 +52,14 @@ fn make_transfer(
         from_account,
         -value,
         TransactionKind::Transfer,
-        format!("Transferência para {:?}", to_account),
+        format!("Transfer to {:?}", to_account),
     );
     Account::update_balance(
         db,
         to_account,
         value,
         TransactionKind::Transfer,
-        format!("Transferência de {}", value),
+        format!("Transfer of {}", value),
     );
 
     Ok(())
@@ -68,23 +68,26 @@ fn make_transfer(
 pub fn transfer_input(db: &Database, account: &mut Account) {
     loop {
         let email =
-            read_input("Insira o email do destinário (digite 0 para retornar ao menu principal): ");
+            read_input("
+            Enter the recipient's email (enter 0 to return to the main menu):");
         if email == "0" {
             break;
         }
         let value = read_input(
-            "Insira o valor a ser transferido (digite 0 para retornar ao menu principal): ",
+            "
+            Enter the amount to be transferred (enter 0 to return to the main menu):",
         );
         if value == "0" {
             break;
         }
         if let Ok(value) = value.parse::<f64>() {
             match transfer(db, &account.id, &email, value) {
-                Ok(_) => println!("Você transferiu {:.2} para {}", value, email),
+                Ok(_) => println!("You transferred {:.2} to {}", value, email),
                 Err(e) => println!("{}", e),
             }
         } else {
-            println!("Valor inválido, tente novamente")
+            println!("
+            Invalid value, please try again")
         }
     }
 }

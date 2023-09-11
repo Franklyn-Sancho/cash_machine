@@ -11,12 +11,11 @@ pub struct Account {
 }
 
 impl Account {
-    // Método para criar uma nova conta com saldo zero
     pub fn new(id: i32, balance: f64) -> Self {
         Self {
             id,
             balance,
-            coins: [2.00, 5.00, 10.00, 20.00, 50.00, 100.00],
+            coins: [2.00, 5.00, 10.00, 20.00, 50.00, 100.00], //valid coins
         }
 
     }
