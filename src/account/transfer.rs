@@ -4,7 +4,7 @@ use crate::{
         account_model::{create_account, get_account_by_id, get_account_by_user, TransactionKind},
         user,
     },
-    utils::read_input::read_input,
+    utils::read_input::read_input_and_check,
 };
 
 use super::account::Account;
@@ -36,8 +36,7 @@ fn check_sufficient_balance(from_account: &Account, value: f64) -> Result<(), St
 }
 
 fn get_to_account(db: &Database, to_email: &str) -> Result<Account, String> {
-    let to_user =
-        user::User::find_by_email(db, to_email).ok_or("Recipient user not found")?;
+    let to_user = user::User::find_by_email(db, to_email).ok_or("Recipient user not found")?;
     Ok(get_account_by_user(db, &to_user.id).unwrap_or_else(|| create_account(db, &to_user.id)))
 }
 
@@ -66,23 +65,23 @@ fn make_transfer(
 }
 
 pub fn transfer_input(db: &Database, account: &mut Account) {
-    loop {
-        let email = read_input("Enter the recipient's email (enter 0 to return to the main menu):");
-        if email == "0" {
-            break;
-        }
-        let value = read_input("Enter the amount to be transferred (enter 0 to return to the main menu): ");
-        if value == "0" {
-            break;
-        }
-        if let Ok(value) = value.parse::<f64>() {
-            match transfer(db, &account.id, &email, value) {
-                Ok(_) => println!("You transferred {:.2} to {}", value, email),
-                Err(e) => println!("{}", e),
+    while let Some(email) = read_input_and_check("Enter the recipient's email (enter 0 to return to the main menu): ") {
+        if let Some(value) = read_input_and_check("Enter the amount to be transferred: ") {
+            if let Ok(value) = value.parse::<f64>() {
+                match transfer(db, &account.id, &email, value) {
+                    Ok(_) => {
+                        println!("You transferred {:.2} to {}", value, email);
+                        // I need to change this desreference
+                        *account = get_account_by_id(db, &account.id).expect("Failed to reload account");
+                    },
+                    Err(e) => println!("{}", e),
+                }
+            } else {
+                println!("Invalid value, please try again")
             }
-        } else {
-            println!("
-            Invalid value, please try again")
         }
     }
 }
+
+
+

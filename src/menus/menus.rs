@@ -3,7 +3,7 @@ use crate::{
     account::{deposit::deposit_input, transfer::transfer_input, withdraw::withdraw_input},
     authentication::{authentication::authenticate, register::register},
     database::database::Database,
-    models::account_model::get_transactions,
+    models::{account_model::get_transactions, user::{User, self}},
     utils::read_input::read_input,
 };
 
@@ -19,8 +19,8 @@ pub fn login_register_menu(db: &Database) {
         if let Ok(option) = option.parse() {
             match option {
                 1 => {
-                    if let Some(mut account) = authenticate(db) {
-                        transaction_menu(db, &mut account);
+                    if let Some((mut account, user)) = authenticate(db) {
+                        transaction_menu(db, &mut account, &user);
                         break;
                     } else {
                         println!("invalid email or password");
@@ -39,8 +39,9 @@ pub fn login_register_menu(db: &Database) {
 }
 
 //menu do sistema bancário (saque e deposito)
-fn transaction_menu(db: &Database, account: &mut Account) {
+fn transaction_menu(db: &Database, account: &mut Account, user: &User) {
     loop {
+        println!("Welcome, {}", user.email);
         println!("current balance: {:.2}", account.balance);
         println!("choose an option: ");
         println!("1 - Deposit");
