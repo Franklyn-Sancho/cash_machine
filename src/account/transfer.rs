@@ -11,21 +11,20 @@ use super::account::Account;
 
 pub fn transfer(
     db: &Database,
-    from_account_id: &i32,
+    from_account: &mut Account,
     to_email: &str,
     value: f64,
 ) -> Result<(), String> {
-    let mut from_account = get_from_account(db, from_account_id)?;
-    check_sufficient_balance(&from_account, value)?;
+    check_sufficient_balance(from_account, value)?;
 
     let mut to_account = get_to_account(db, to_email)?;
 
-    make_transfer(db, &mut from_account, &mut to_account, value)
+    make_transfer(db, from_account, &mut to_account, value)
 }
 
-fn get_from_account(db: &Database, from_account_id: &i32) -> Result<Account, String> {
+/* fn get_from_account(db: &Database, from_account_id: &i32) -> Result<Account, String> {
     get_account_by_id(db, from_account_id).ok_or("Source account not found".to_string())
-}
+} */
 
 fn check_sufficient_balance(from_account: &Account, value: f64) -> Result<(), String> {
     if from_account.balance < value {
@@ -68,12 +67,8 @@ pub fn transfer_input(db: &Database, account: &mut Account) {
     while let Some(email) = read_input_and_check("Enter the recipient's email (enter 0 to return to the main menu): ") {
         if let Some(value) = read_input_and_check("Enter the amount to be transferred: ") {
             if let Ok(value) = value.parse::<f64>() {
-                match transfer(db, &account.id, &email, value) {
-                    Ok(_) => {
-                        println!("You transferred {:.2} to {}", value, email);
-                        // I need to change this desreference
-                        *account = get_account_by_id(db, &account.id).expect("Failed to reload account");
-                    },
+                match transfer(db, account, &email, value) {
+                    Ok(_) => println!("You transferred {:.2} to {}", value, email),
                     Err(e) => println!("{}", e),
                 }
             } else {
