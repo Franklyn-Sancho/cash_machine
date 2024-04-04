@@ -21,19 +21,14 @@ pub fn deposit(db: &Database, account: &mut Account, value: f64) -> Result<(), S
     Ok(())
 }
 
-// Função para realizar depósitos na conta
 pub fn deposit_input(db: &Database, account: &mut Account) {
     while let Some(value) = read_input_and_check(
         "How much do you want to deposit (enter 0 to return to the home menu): ",
     ) {
         if let Ok(value) = value.parse::<f64>() {
-            Account::update_balance(
-                db,
-                account,
-                value,
-                TransactionKind::Deposit,
-                format!("Deposit of {:.2}", value),
-            );
+            if let Err(err) = deposit(db, account, value) {
+                println!("{}", err);
+            }
         } else {
             println!("Invalid value, please try again")
         }

@@ -1,4 +1,7 @@
-use crate::database::database::Database;
+use rusqlite::params;
+use uuid::Uuid;
+
+use crate::{authentication::register::hash_password, database::database::Database};
 
 pub struct User {
     pub id: String,
@@ -13,9 +16,20 @@ impl User {
         Self { id, email, password_hash }
     }
 
-    pub fn create_user(db: &Database, id: &str, email: &str, password_hash: &str) -> Self {
-        db.insert_user(id, email, password_hash);
-        Self::new(id.to_string(), email.to_string(), password_hash.to_string())
+    pub fn insert_user(db: &Database ,user_id: &str, email: &str, password_hash: &str) {
+        db.conn
+            .execute(
+                "INSERT INTO users (id, email, password) VALUES (?1, ?2, ?3)",
+                params![user_id, email, password_hash],
+            )
+            .unwrap();
+    }
+
+    pub fn create_user(db: &Database, email: &str, password: &str) -> Self {
+        let password_hash = hash_password(password);
+        let user_id = Uuid::new_v4().to_string();
+        Self::insert_user(db, &user_id, email, &password_hash);
+        Self::new(user_id, email.to_string(), password_hash)
     }
 
     pub fn find_by_email(db: &Database, email: &str) -> Option<Self> {
@@ -29,4 +43,5 @@ impl User {
             None
         }
     }
+
 }

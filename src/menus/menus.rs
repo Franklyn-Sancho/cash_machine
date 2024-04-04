@@ -57,7 +57,7 @@ fn transaction_menu(db: &Database, account: &mut Account, user: &User) {
                 1 => deposit_input(db, account),
                 2 => withdraw_input(db, account),
                 3 => {
-                    let transactions = get_transactions(db, account.id);
+                    let transactions = get_transactions(db, &account.id);
                     for transaction in transactions {
                         println!("{:?}", transaction)
                     }

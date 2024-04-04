@@ -22,9 +22,6 @@ pub fn transfer(
     make_transfer(db, from_account, &mut to_account, value)
 }
 
-/* fn get_from_account(db: &Database, from_account_id: &i32) -> Result<Account, String> {
-    get_account_by_id(db, from_account_id).ok_or("Source account not found".to_string())
-} */
 
 fn check_sufficient_balance(from_account: &Account, value: f64) -> Result<(), String> {
     if from_account.balance < value {

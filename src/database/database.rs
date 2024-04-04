@@ -28,7 +28,7 @@ impl Database {
         self.conn
             .execute(
                 "CREATE TABLE IF NOT EXISTS accounts (
-                id INTEGER PRIMARY KEY, user_id TEXT, balance REAL,
+                id TEXT PRIMARY KEY, user_id TEXT, balance REAL,
                 FOREIGN KEY(user_id) REFERENCES users(id)
             )",
                 [],
@@ -39,8 +39,8 @@ impl Database {
         self.conn
             .execute(
                 "CREATE TABLE IF NOT EXISTS transactions (
-                    id INTEGER PRIMARY KEY,
-                    account_id INTEGER,
+                    id STRING PRIMARY KEY,
+                    account_id STRING,
                     date TEXT,
                     value REAL,
                     kind TEXT,
@@ -51,12 +51,12 @@ impl Database {
             .unwrap();
     }
 
-    pub fn insert_user(&self, user_id: &str, email: &str, password_hash: &str) {
+    /* pub fn insert_user(&self, user_id: &str, email: &str, password_hash: &str) {
         self.conn
             .execute(
                 "INSERT INTO users (id, email, password) VALUES (?1, ?2, ?3)",
                 params![user_id, email, password_hash],
             )
             .unwrap();
-    }
+    } */
 }

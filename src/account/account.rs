@@ -1,17 +1,18 @@
 use chrono::Utc;
+use uuid::Uuid;
 
 use crate::{database::database::Database, models::account_model::{TransactionKind, update_account, Transaction, create_transaction}};
 
 // Definição da estrutura Account para representar uma conta bancária
 #[derive(Debug)]
 pub struct Account {
-    pub id: i32,
+    pub id: String,
     pub balance: f64, // Saldo da conta
     pub coins: [f64; 6],  // Cédulas aceitas para depósito
 }
 
 impl Account {
-    pub fn new(id: i32, balance: f64) -> Self {
+    pub fn new(id: String, balance: f64) -> Self {
         Self {
             id,
             balance,
@@ -34,8 +35,10 @@ impl Account {
         account.balance += value;
         update_account(db, account);
     
+        let transaction_id = Uuid::new_v4().to_string();
         let transaction = Transaction {
-            account_id: account.id,
+            id: transaction_id,
+            account_id: account.id.clone(),
             date: Utc::now(),
             value,
             kind,
