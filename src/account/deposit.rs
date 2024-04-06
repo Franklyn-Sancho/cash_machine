@@ -3,8 +3,8 @@
 use crate::database::database::Database;
 use crate::models::account_model::TransactionKind;
 use crate::utils::read_input::read_input_and_check;
+use crate::models::account::Account;
 
-use super::account::Account;
 
 pub fn deposit(db: &Database, account: &mut Account, value: f64) -> Result<(), String> {
     if !account.is_valid_coin(value) {

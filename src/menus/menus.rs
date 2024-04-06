@@ -1,9 +1,9 @@
 use crate::{
-    account::account::Account,
+    models::account::Account,
     account::{deposit::deposit_input, transfer::transfer_input, withdraw::withdraw_input},
     authentication::{authentication::authenticate, register::register},
     database::database::Database,
-    models::{account_model::get_transactions, user::{User, self}},
+    models::{account_model::Transaction, user::User},
     utils::read_input::read_input,
 };
 
@@ -57,7 +57,7 @@ fn transaction_menu(db: &Database, account: &mut Account, user: &User) {
                 1 => deposit_input(db, account),
                 2 => withdraw_input(db, account),
                 3 => {
-                    let transactions = get_transactions(db, &account.id);
+                    let transactions = Transaction::get_transactions(db, &account.id);
                     for transaction in transactions {
                         println!("{:?}", transaction)
                     }

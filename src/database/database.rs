@@ -50,13 +50,4 @@ impl Database {
             )
             .unwrap();
     }
-
-    /* pub fn insert_user(&self, user_id: &str, email: &str, password_hash: &str) {
-        self.conn
-            .execute(
-                "INSERT INTO users (id, email, password) VALUES (?1, ?2, ?3)",
-                params![user_id, email, password_hash],
-            )
-            .unwrap();
-    } */
 }

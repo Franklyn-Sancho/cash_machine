@@ -8,6 +8,7 @@ pub mod utils {
 }
 
 pub mod models {
+    pub mod account;
     pub mod account_model;
     pub mod user;
 }
@@ -17,7 +18,6 @@ pub mod menus {
 }
 
 pub mod account {
-    pub mod account;
     pub mod deposit;
     pub mod transfer;
     pub mod withdraw;

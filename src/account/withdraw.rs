@@ -1,5 +1,5 @@
 // withdraw.rs
-use crate::account::account::Account;
+use crate::models::account::Account;
 use crate::database::database::Database;
 use crate::models::account_model::TransactionKind;
 use crate::utils::read_input::read_input_and_check;

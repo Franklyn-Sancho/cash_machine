@@ -1,13 +1,13 @@
 use crate::{
     database::database::Database,
     models::{
-        account_model::{create_account, get_account_by_id, get_account_by_user, TransactionKind},
+        account_model::TransactionKind,
         user,
+        account::Account
     },
     utils::read_input::read_input_and_check,
 };
 
-use super::account::Account;
 
 pub fn transfer(
     db: &Database,
@@ -33,7 +33,7 @@ fn check_sufficient_balance(from_account: &Account, value: f64) -> Result<(), St
 
 fn get_to_account(db: &Database, to_email: &str) -> Result<Account, String> {
     let to_user = user::User::find_by_email(db, to_email).ok_or("Recipient user not found")?;
-    Ok(get_account_by_user(db, &to_user.id).unwrap_or_else(|| create_account(db, &to_user.id)))
+    Ok(Account::get_account_by_user(db, &to_user.id).unwrap_or_else(|| Account::create_account(db, &to_user.id)))
 }
 
 fn make_transfer(
