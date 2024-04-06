@@ -1,7 +1,7 @@
 use crate::{
     database::database::Database,
     models::{
-        account_model::TransactionKind,
+        transaction::TransactionKind,
         user,
         account::Account
     },

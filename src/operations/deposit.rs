@@ -1,7 +1,7 @@
 // deposit.rs
 
 use crate::database::database::Database;
-use crate::models::account_model::TransactionKind;
+use crate::models::transaction::TransactionKind;
 use crate::utils::read_input::read_input_and_check;
 use crate::models::account::Account;
 

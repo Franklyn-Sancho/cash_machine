@@ -9,7 +9,7 @@ pub mod utils {
 
 pub mod models {
     pub mod account;
-    pub mod account_model;
+    pub mod transaction;
     pub mod user;
 }
 
@@ -17,7 +17,7 @@ pub mod menus {
     pub mod menus;
 }
 
-pub mod account {
+pub mod operations {
     pub mod deposit;
     pub mod transfer;
     pub mod withdraw;

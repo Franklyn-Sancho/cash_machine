@@ -1,9 +1,9 @@
 use crate::{
     models::account::Account,
-    account::{deposit::deposit_input, transfer::transfer_input, withdraw::withdraw_input},
+    operations::{deposit::deposit_input, transfer::transfer_input, withdraw::withdraw_input},
     authentication::{authentication::authenticate, register::register},
     database::database::Database,
-    models::{account_model::Transaction, user::User},
+    models::{transaction::Transaction, user::User},
     utils::read_input::read_input,
 };
 

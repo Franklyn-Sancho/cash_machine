@@ -2,7 +2,7 @@ use chrono::Utc;
 use rusqlite::params;
 use uuid::Uuid;
 
-use crate::{database::database::Database, models::account_model::{TransactionKind, Transaction}};
+use crate::{database::database::Database, models::transaction::{TransactionKind, Transaction}};
 
 // Definição da estrutura Account para representar uma conta bancária
 #[derive(Debug)]

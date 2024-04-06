@@ -1,7 +1,7 @@
 // withdraw.rs
 use crate::models::account::Account;
 use crate::database::database::Database;
-use crate::models::account_model::TransactionKind;
+use crate::models::transaction::TransactionKind;
 use crate::utils::read_input::read_input_and_check;
 
 pub fn withdraw(db: &Database, account: &mut Account, value: f64) -> Result<(), String> {
