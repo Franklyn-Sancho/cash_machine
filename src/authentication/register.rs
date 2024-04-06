@@ -18,14 +18,15 @@ pub fn register(db: &Database) {
         return;
     }
 
-    User::create_user(db, &email, &password);
+    User::insert_user(db, &email, &password);
 
     println!("User registered successfully");
 }
 
-/* fn create_user(db: &Database, email: &str, password: &str) {
+/* pub fn create_user(db: &Database, email: &str, password: &str) -> User {
     let password_hash = hash_password(password);
     let user_id = Uuid::new_v4().to_string();
-    User::create_user(db, &user_id, email, &password_hash);
+    User::insert_user(db, &user_id, email, &password_hash);
+    User::new(user_id, email.to_string(), password_hash)
 } */
 
